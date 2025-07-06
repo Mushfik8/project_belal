@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potol Baba - Modern Event Sharing Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div id="loading-screen" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p class="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+    </div>
+    <header id="header"
+        class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent cursor-pointer"
+                            onclick="router.navigate('home')">
+                            Potol Baba
+                        </h1>
+                    </div>
+                </div>
+                <!-- search nav -->
+                <div class="hidden md:flex items-center flex-1 max-w-lg mx-8">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search-input" placeholder="Search events, people, or places..."
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors" />
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+
+                    <button id="theme-toggle"
+                        class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
+                    </button>
+                    <button id="create-event-btn"
+                        class="hidden md:flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i data-lucide="plus" class="h-4 w-4"></i>
+                        <span>Create Event</span>
+                    </button>
+                    <!-- notificstion-->
+                    <div class="relative">
+                        <button id="notifications-btn"
+                            class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i data-lucide="bell" class="h-5 w-5"></i>
+                            <span id="notification-count"
+                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">3</span>
+                        </button>
+                    </div>
+
+                    <!--msg-->
+                    <button id="messages-btn"
+                        class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i data-lucide="message-circle" class="h-5 w-5"></i>
+                    </button>
+                    <div class="relative">
+                        <button id="profile-btn"
+                            class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center">
+                                <i data-lucide="user" class="h-4 w-4 text-white"></i>
+                            </div>
+                            <span class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">Mushfikur
+                                Rahman</span>
+                        </button>
+
+                        <div id="profile-dropdown"
+                            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 hidden">
+                            <button onclick="router.navigate('profile')"
+                                class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2">
+                                <i data-lucide="user" class="h-4 w-4"></i>
+                                <span>Profile</span>
+                            </button>
+                            <button onclick="router.navigate('settings')"
+                                class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2">
+                                <i data-lucide="settings" class="h-4 w-4"></i>
+                                <span>Settings</span>
+                            </button>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                            <button id="logout-btn"
+                                class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2">
+                                <i data-lucide="log-out" class="h-4 w-4"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="mobile-menu-btn"
+                        class="md:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden py-4 border-t border-gray-200 dark:border-gray-700 hidden">
+                <div class="px-2 pb-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Search events..."
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+                    </div>
+                </div>
+
+                <!-- mobile nav-->
+                <div class="space-y-1 px-2">
+                    <button onclick="router.navigate('home')"
+                        class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        Home
+                    </button>
+                    <button onclick="router.navigate('events')"
+                        class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        Events
+                    </button>
+                    <button onclick="router.navigate('discover')"
+                        class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        Discover
+                    </button>
+                    <button id="mobile-create-event"
+                        class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 transition-colors">
+                        Create Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen">
+
+    </main>
+
+    <footer id="footer" class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h3
+                        class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-4">
+                        Potol Baba
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        The modern platform for discovering, creating, and sharing amazing events with your community.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors">
+                            <i data-lucide="facebook" class="h-5 w-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors">
+                            <i data-lucide="twitter" class="h-5 w-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors">
+                            <i data-lucide="instagram" class="h-5 w-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors">
+                            <i data-lucide="linkedin" class="h-5 w-5"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Home</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Events</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Discover</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Create</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Help
+                                Center</a></li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Contact
+                                Us</a></li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors">Terms
+                                of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-600 dark:text-gray-400">
+                    © 2024 Potol Baba. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modals-container"></div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/components/loginForm.js"></script>
+    <script src="js/components/registerForm.js"></script>
+    <script src="js/components/eventCard.js"></script>
+    <script src="js/components/eventForm.js"></script>
+    <script src="js/components/profileForm.js"></script>
+    <script src="js/components/messageComponent.js"></script>
+    <script src="js/components/notificationComponent.js"></script>
+    <script src="js/pages/home.js"></script>
+    <script src="js/pages/events.js"></script>
+    <script src="js/pages/profile.js"></script>
+    <script src="js/pages/settings.js"></script>
+    <script src="js/pages/admin.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

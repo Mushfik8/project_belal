@@ -1,0 +1,21 @@
+{
+  "name": "eventshare",
+  "version": "1.0.0",
+  "description": "A modern event sharing platform built with vanilla JavaScript, HTML, and Tailwind CSS.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server",
+    "start": "live-server"
+  },
+  "keywords": [
+    "vanillajs",
+    "html",
+    "tailwind",
+    "event-platform"
+  ],
+  "author": "EventShare Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
